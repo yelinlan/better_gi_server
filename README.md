@@ -4,7 +4,8 @@
 ### 4.使用：
 ##### 1.
 修改yml
-   ```server:
+```
+server:
   port: 8080
   servlet:
     context-path: /bgi
@@ -17,7 +18,7 @@ log:
     endScript: shutdown -s -t 60 #执行完后操作，60s后关机
     closeSecond: 3 # 3s后关闭应用
     event: DRAGON_END #关注事件 一条龙
-   ```
+```
 ##### 2.
 http://localhost:8080/bgi/shutdown 填入bettergi webhook端点
 ##### 3.

@@ -4,7 +4,7 @@
 ### 4.使用：
 ##### 1.
 修改yml
-    ```
+    ```yml
 server:
   port: 8080
   servlet:

@@ -1,0 +1,13 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /bgi
+log:
+  file:
+    path: C:\\Users\\Administrator\\Desktop\\auto\\
+    suffix: .log
+    timeStamp: yyyyMMdd
+    startScript: C:\\Program Files\\BetterGI\\BetterGI.exe startOneDragon
+    endScript: shutdown -s -t 60
+    closeSecond: 3
+    event: DRAGON_END

@@ -4,8 +4,7 @@
 ### 4.使用：
 ##### 1.
 修改yml
-   ```
-server:
+   ```server:
   port: 8080
   servlet:
     context-path: /bgi

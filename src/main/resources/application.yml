@@ -11,3 +11,10 @@ log:
     endScript: shutdown -s -t 60
     closeSecond: 3
     event: DRAGON_END
+logging:
+  level:
+    root: INFO
+  file:
+    name: logs/application.log
+    max-size: 10MB
+    max-history: 20

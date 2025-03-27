@@ -42,6 +42,7 @@ public class BgiWebHookController {
 			if (EventEnum.isExistAndEqual(webHookReq.getEvent(), logFileConfig.getEvent())) {
 				if (webHookReq.getResult().equals("Success")) {
 					log.info(logFileConfig.getEvent().getDescription() + " 执行，准备关机！");
+					Runtime.getRuntime().exec("nircmd.exe mutesysvolume 0");
 				} else {
 					//生成一个执行失败日志文件
 					FileUtil.rename(new File(file), ymd + "_failed" + logFileConfig.getSuffix(), true);

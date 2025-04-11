@@ -51,7 +51,7 @@ public class BgiWebHookController {
 				//按下任意键后就执行取消关机命令
 				cancelShutdown();
 			}
-			if (!webHookReq.getResult().equals("Success")) {
+			if (!webHookReq.getResult().equals("0")) {
 				//生成一个执行失败日志文件
 				FileUtil.rename(new File(file), ymd + "_failed" + logFileConfig.getSuffix(), true);
 				FileUtil.appendUtf8String(

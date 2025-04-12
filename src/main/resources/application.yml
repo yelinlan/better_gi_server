@@ -11,7 +11,7 @@ log:
       - C:\\Program Files\\BetterGI\\BetterGI.exe --startGroups flower
       - C:\\Program Files\\BetterGI\\BetterGI.exe startOneDragon
     endScript:
-      - TASKKILL /F /IM BetterGI.exe /T
+      - TASKKILL /F /IM BetterGI.exe
       - shutdown /s /t 60
     closeSecond: 3
     event:

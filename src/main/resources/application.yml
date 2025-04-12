@@ -7,10 +7,14 @@ log:
     path: C:\\Users\\Administrator\\Desktop\\auto\\
     suffix: .log
     timeStamp: yyyyMMdd
-    startScript: C:\\Program Files\\BetterGI\\BetterGI.exe startOneDragon
-    endScript: shutdown -s -t 60
+    startScript:
+      - C:\\Program Files\\BetterGI\\BetterGI.exe startOneDragon
+      - C:\\Program Files\\BetterGI\\BetterGI.exe --startGroups flower
+    endScript: TASKKILL /F /IM BetterGI.exe /T
     closeSecond: 3
-    event: DRAGON_END
+    event:
+      - GROUP_END
+      - DRAGON_END
 logging:
   level:
     root: INFO

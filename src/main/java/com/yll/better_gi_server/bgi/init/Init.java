@@ -66,7 +66,7 @@ public class Init implements CommandLineRunner {
 			//静音
 			Runtime.getRuntime().exec("nircmd.exe mutesysvolume 1");
 			//启动BGI 一条龙程序。"C:\Program Files\BetterGI\BetterGI.exe" startOneDragon
-			Runtime.getRuntime().exec(logFileConfig.getStartScript());
+			Runtime.getRuntime().exec(logFileConfig.getStartScript()[0]);
 		} else {
 			// 文件存在，不静音
 			Runtime.getRuntime().exec("nircmd.exe mutesysvolume 0");

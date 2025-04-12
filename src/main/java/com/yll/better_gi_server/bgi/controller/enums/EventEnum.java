@@ -37,13 +37,13 @@ public enum EventEnum {
 	}
 
 	//判断枚举是否存在并且为传入枚举
-	public static boolean isExistAndEqual(String code, EventEnum eventEnum) {
-		for (EventEnum eventEnum1 : EventEnum.values()) {
-			if (eventEnum1.getCode().equals(code) && eventEnum1.equals(eventEnum)) {
-				return true;
+	public static int index(String code, EventEnum[] enums) {
+		for (int i = 0; i < enums.length; i++) {
+			if (enums[i].getCode().equals(code)) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
 	}
 
 

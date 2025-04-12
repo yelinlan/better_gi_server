@@ -13,10 +13,10 @@ public class LogFileConfig {
 	private String path = "C:\\Users\\Administrator\\Desktop\\auto\\";
 	private String suffix = ".log";
 	private String timeStamp = "yyyyMMdd";
-	private String startScript = "C:\\Program Files\\BetterGI\\BetterGI.exe startOneDragon";
-	private String endScript = "shutdown -s -t 60";
+	private String[] startScript = new String[]{"C:\\Program Files\\BetterGI\\BetterGI.exe startOneDragon"};
+	private String endScript = "TASKKILL /F /IM BetterGI.exe /T";
 	private long closeSecond = 3;
 	private String ip = "localhost";
-	private EventEnum event = EventEnum.DRAGON_END;
+	private EventEnum[] event = new EventEnum[]{EventEnum.DRAGON_END, EventEnum.GROUP_END};
 
 }

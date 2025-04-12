@@ -31,7 +31,7 @@ public class BgiWebHookController {
 	private final LogFileConfig logFileConfig;
 
 	@RequestMapping("/shutdown")
-	public String test(@RequestBody WebHookReq webHookReq) throws IOException {
+	public String test(@RequestBody WebHookReq webHookReq) throws IOException, InterruptedException {
 		if (EventEnum.isExist(webHookReq.getEvent())) {
 			String ymd = DateUtil.format(DateUtil.date(), logFileConfig.getTimeStamp());
 			String file = logFileConfig.getPath() + ymd + logFileConfig.getSuffix();
@@ -39,17 +39,39 @@ public class BgiWebHookController {
 			FileUtil.appendUtf8String(webHookReq.getTimestamp() + ": " + JSONUtil.toJsonPrettyStr(webHookReq) + "\n",
 					file);
 			log.info("收到事件！{}", JSONUtil.toJsonPrettyStr(webHookReq));
-			if (EventEnum.isExistAndEqual(webHookReq.getEvent(), logFileConfig.getEvent())) {
-				if (webHookReq.getResult().equals("Success")) {
-					log.info(logFileConfig.getEvent().getDescription() + " 执行，准备关机！");
-					Runtime.getRuntime().exec("nircmd.exe mutesysvolume 0");
+			int index = EventEnum.index(webHookReq.getEvent(), logFileConfig.getEvent());
+			if (index != -1) {
+				if (index == logFileConfig.getEvent().length - 1) {
+					if (webHookReq.getResult().equals("0")) {
+						log.info(logFileConfig.getEvent()[index].getDescription() + " 执行完毕，恢复音量！");
+						Runtime.getRuntime().exec("nircmd.exe mutesysvolume 0");
+					} else {
+						//生成一个执行失败日志文件
+						FileUtil.rename(new File(file),
+								ymd + "_failed_" + index + "_" + logFileConfig.getEvent()[index].getDescription()
+										+ logFileConfig.getSuffix(), true);
+					}
+					Runtime.getRuntime().exec(logFileConfig.getEndScript());
+					//睡眠300ms 保证BGI被关闭
+					Thread.sleep(3000);
+					//按下任意键后就执行取消关机命令
+					cancelShutdown();
 				} else {
-					//生成一个执行失败日志文件
-					FileUtil.rename(new File(file), ymd + "_failed" + logFileConfig.getSuffix(), true);
+					if (webHookReq.getResult().equals("0")) {
+						log.info(logFileConfig.getEvent()[index].getDescription() + " 执行完毕！");
+						log.info(logFileConfig.getEvent()[index + 1].getDescription() + " 开始执行");
+					} else {
+						//生成一个执行失败日志文件
+						FileUtil.rename(new File(file),
+								ymd + "_failed_" + index + "_" + logFileConfig.getEvent()[index].getDescription()
+										+ logFileConfig.getSuffix(), true);
+					}
+					Runtime.getRuntime().exec(logFileConfig.getEndScript());
+					//睡眠300ms 保证BGI被关闭
+					Thread.sleep(3000);
+					//启动BGI 下一条脚本
+					Runtime.getRuntime().exec(logFileConfig.getStartScript()[index+1]);
 				}
-				Runtime.getRuntime().exec(logFileConfig.getEndScript());
-				//按下任意键后就执行取消关机命令
-				cancelShutdown();
 			}
 			if (!webHookReq.getResult().equals("0")) {
 				//生成一个执行失败日志文件
@@ -62,7 +84,7 @@ public class BgiWebHookController {
 		} else {
 			//记录日志
 			FileUtil.appendUtf8String(webHookReq.getTimestamp() + ": " + JSONUtil.toJsonPrettyStr(webHookReq) + "\n",
-					logFileConfig.getPath() + "unknown_event" + logFileConfig.getPath());
+					logFileConfig.getPath() + "unknown_event" + logFileConfig.getSuffix());
 		}
 		return "test";
 	}

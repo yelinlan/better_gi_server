@@ -21,7 +21,8 @@ public enum EventEnum {
     TCG_END("tcg.end", "七圣召唤结束"),
     ALBUM_START("album.start", "自动音游专辑启动"),
     ALBUM_END("album.end", "自动音游专辑结束"),
-    ALBUM_ERROR("album.error", "自动音游专辑错误");
+    ALBUM_ERROR("album.error", "自动音游专辑错误"),
+	DAILY_REWARD("daily.reward", "检查到每日奖励未领取，请手动查看！");
 
     private final String code;
     private final String description;

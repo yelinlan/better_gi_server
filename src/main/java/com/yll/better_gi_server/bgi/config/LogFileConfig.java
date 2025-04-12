@@ -14,7 +14,7 @@ public class LogFileConfig {
 	private String suffix = ".log";
 	private String timeStamp = "yyyyMMdd";
 	private String[] startScript = new String[]{"C:\\Program Files\\BetterGI\\BetterGI.exe startOneDragon"};
-	private String endScript = "TASKKILL /F /IM BetterGI.exe /T";
+	private String[] endScript = new String[]{"TASKKILL /F /IM BetterGI.exe /T", "shutdown /s /t 60"};
 	private long closeSecond = 3;
 	private String ip = "localhost";
 	private EventEnum[] event = new EventEnum[]{EventEnum.DRAGON_END, EventEnum.GROUP_END};

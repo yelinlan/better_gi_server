@@ -51,23 +51,19 @@ public class BgiWebHookController {
 								ymd + "_failed_" + index + "_" + logFileConfig.getEvent()[index].getDescription()
 										+ logFileConfig.getSuffix(), true);
 					}
-					Runtime.getRuntime().exec(logFileConfig.getEndScript());
-					//睡眠300ms 保证BGI被关闭
-					Thread.sleep(3000);
-					//按下任意键后就执行取消关机命令
-					cancelShutdown();
+					exit();
 				} else {
 					if (webHookReq.getResult().equals("0")) {
-						log.info(logFileConfig.getEvent()[index].getDescription() + " 执行完毕！");
-						log.info(logFileConfig.getEvent()[index + 1].getDescription() + " 开始执行");
+						log.info(  "【{}】 执行完毕！",logFileConfig.getEvent()[index].getDescription());
+						log.info(  "【{}】 开始执行！",logFileConfig.getEvent()[index + 1].getDescription());
 					} else {
 						//生成一个执行失败日志文件
 						FileUtil.rename(new File(file),
 								ymd + "_failed_" + index + "_" + logFileConfig.getEvent()[index].getDescription()
 										+ logFileConfig.getSuffix(), true);
 					}
-					Runtime.getRuntime().exec(logFileConfig.getEndScript());
-					//睡眠300ms 保证BGI被关闭
+					Runtime.getRuntime().exec(logFileConfig.getEndScript()[0]);
+					//睡眠3000ms 保证BGI被关闭
 					Thread.sleep(3000);
 					//启动BGI 下一条脚本
 					Runtime.getRuntime().exec(logFileConfig.getStartScript()[index+1]);
@@ -79,14 +75,25 @@ public class BgiWebHookController {
 				FileUtil.appendUtf8String(
 						webHookReq.getTimestamp() + ": " + JSONUtil.toJsonPrettyStr(webHookReq) + "\n",
 						logFileConfig.getPath() + ymd + "_failed" + logFileConfig.getSuffix());
-				Runtime.getRuntime().exec(logFileConfig.getEndScript());
+				Runtime.getRuntime().exec(logFileConfig.getEndScript()[1]);
 			}
 		} else {
 			//记录日志
 			FileUtil.appendUtf8String(webHookReq.getTimestamp() + ": " + JSONUtil.toJsonPrettyStr(webHookReq) + "\n",
 					logFileConfig.getPath() + "unknown_event" + logFileConfig.getSuffix());
 		}
+		if ( webHookReq.getEvent().contains("error") ){
+			exit();
+		}
 		return "test";
+	}
+
+	private void exit() throws IOException, InterruptedException {
+		Runtime.getRuntime().exec(logFileConfig.getEndScript()[1]);
+		//睡眠3000ms 保证BGI被关闭
+		Thread.sleep(3000);
+		//启动BGI 下一条脚本
+		cancelShutdown();
 	}
 
 	private void cancelShutdown() {

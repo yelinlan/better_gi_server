@@ -44,7 +44,7 @@ public class BgiWebHookController {
 				if (index == logFileConfig.getEvent().length - 1) {
 					if (webHookReq.getResult().equals("0")) {
 						log.info(logFileConfig.getEvent()[index].getDescription() + " 执行完毕，恢复音量！");
-						Runtime.getRuntime().exec("nircmd.exe mutesysvolume 0");
+						Runtime.getRuntime().exec("net start \"Audiosrv\"");
 					} else {
 						//生成一个执行失败日志文件
 						FileUtil.rename(new File(file),

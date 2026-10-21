@@ -3,6 +3,9 @@ package com.yll.better_gi_server.bgi.controller.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 事件枚举
+ */
 @Getter
 @AllArgsConstructor
 public enum EventEnum {
@@ -28,13 +31,13 @@ public enum EventEnum {
     private final String description;
 
 	//判断枚举是否存在
-	public static boolean isExist(String code) {
+	public static EventEnum getEnumByCode(String code) {
 		for (EventEnum eventEnum : EventEnum.values()) {
 			if (eventEnum.getCode().equals(code)) {
-				return true;
+				return eventEnum;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	//判断枚举是否存在并且为传入枚举

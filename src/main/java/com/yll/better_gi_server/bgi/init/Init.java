@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 /**
  *@项目名称: better_gi_server
  *@类名称: Init
@@ -29,29 +31,26 @@ public class Init implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		log.info("【better gi】 回调接口是：http://{}:{}{}/{}", logFileConfig.getIp(), serverPort, contextPath,
-				"shutdown");
+		log.info("【better gi】 回调接口是：http://localhost:{}{}/{}", serverPort, contextPath, "shutdown");
 		//删除昨天的日志文件
-		FileUtil.del(logFileConfig.getPath() + DateUtil.format(DateUtil.yesterday(), logFileConfig.getTimeStamp())
-				+ logFileConfig.getSuffix());
-		//获取当前日期，格式为 yyyymmdd
-		String fileName = logFileConfig.getPath() + DateUtil.format(DateUtil.date(), logFileConfig.getTimeStamp())
-				+ logFileConfig.getSuffix();
+		FileUtil.del(logFileConfig.getPath() + DateUtil.format(DateUtil.yesterday(), "yyyyMMdd") + ".log");
+		//获取当前日期，格式为 yyyyMMdd
+		String fileName = logFileConfig.getPath() + DateUtil.format(DateUtil.date(), "yyyyMMdd") + ".log";
 		//检查文件是否存在
 		if (!FileUtil.exist(fileName)) {
 			//不存在则创建
 			FileUtil.touch(fileName);
-			//检查文件是否成功创建
-			if (!FileUtil.exist(fileName)) {
-				//创建失败，抛出异常
-				throw new RuntimeException("文件创建失败");
-			}
-			//文件fileName创建成功
-			log.info("文件{}创建成功", fileName);
 			//静音
 			Runtime.getRuntime().exec("net stop \"Audiosrv\"");
 			//启动BGI 一条龙程序。"C:\Program Files\BetterGI\BetterGI.exe" startOneDragon
-			Runtime.getRuntime().exec(logFileConfig.getStartScript()[0]);
+			new Thread(() -> {
+				log.info("启动BGI 一条龙程序！");
+				try {
+					Runtime.getRuntime().exec(logFileConfig.getStartScript()[0]);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}).start();
 		} else {
 			// 文件存在，不静音
 			Runtime.getRuntime().exec("net start \"Audiosrv\"");

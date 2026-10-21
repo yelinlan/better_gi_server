@@ -5,17 +5,13 @@ server:
 log:
   file:
     path: C:\\Users\\Administrator\\Desktop\\auto\\
-    suffix: .log
-    timeStamp: yyyyMMdd
     startScript:
-      - C:\\Program Files\\BetterGI\\BetterGI.exe --startGroups flower
       - C:\\Program Files\\BetterGI\\BetterGI.exe startOneDragon
     endScript:
       - TASKKILL /F /IM BetterGI.exe
       - shutdown /s /t 60
     closeSecond: 3
     event:
-      - GROUP_END
       - DRAGON_END
 logging:
   level:
